@@ -132,6 +132,28 @@ Vector3& Vector3::operator*=(const Vector3& scale)
 	return *this;
 }
 
+bool Vector3::operator==(const Vector3& other) const
+{
+	return (fabsf(x - other.x) < float_epsilon)
+		&& (fabsf(y - other.y) < float_epsilon)
+		&& (fabsf(z - other.z) < float_epsilon);
+}
+
+bool Vector3::operator!=(const Vector3& other) const
+{
+	return !(*this == other);
+}
+
+bool Vector3::Equal(const Vector3& left, const Vector3& right)
+{
+	return left == right;
+}
+
+bool Vector3::NotEqual(const Vector3& left, const Vector3& right)
+{
+	return left != right;
+}
+
 float Vector3::Dot(const Vector3& right) const
 {
 	return x * right.x + y * right.y + z * right.z;
@@ -140,6 +162,57 @@ float Vector3::Dot(const Vector3& right) const
 float Vector3::Dot(const Vector3& left, const Vector3& right)
 {
 	return left.x * right.x + left.y * right.y + left.z * right.z;
+}
+
+Vector3 Vector3::Cross(const Vector3& left, const Vector3& right)
+{
+	return Vector3{
+		left.y * right.z - left.z * right.y,
+		left.z * right.x - left.x * right.z,
+		left.x * right.y - left.y * right.x
+	};
+}
+
+Vector3 Vector3::Lerp(const Vector3& left, const Vector3& right, float t)
+{
+	if (t > 1.0f || t < 0.0f)
+		return Vector3();
+
+	return Vector3{
+		left.x * (1 - t) + right.x * t,
+		left.y * (1 - t) + right.y * t,
+		left.z * (1 - t) + right.z * t
+	};
+}
+
+Vector3 Vector3::Slerp(const Vector3& left, const Vector3& right, float t)
+{
+	if (t > 1.0f || t < 0.0f)
+		return Vector3();
+
+	//When the value of t is close to 0, 
+	//the slerp will yield unexpected results.
+	//So when the value of t is close to 0, fall back on lerp.
+	if (t < 0.01f)
+		return Lerp(left, right, t);
+
+	const Vector3& from = Normalize(left);
+	const Vector3& to = Normalize(right);
+
+	float theta = Angle(from, to);
+	float sinTheta = sinf(theta);
+	float sin1_t_theat = sinf((1 - t) * theta);
+	float sin_t_theta = sinf(t * theta);
+
+	return from * (sin1_t_theat / sinTheta) + to * (sin_t_theta / sinTheta);
+}
+
+Vector3 Vector3::Nlerp(const Vector3& left, const Vector3& right, float t)
+{
+	if (t > 1.0f || t < 0.0f)
+		return Vector3();
+
+	return Normalize(Slerp(left, right, t));
 }
 
 float Vector3::Length() const
@@ -157,10 +230,15 @@ Vector3 Vector3::Normalize() const
 	float length = Length();
 	if (length < float_epsilon)
 	{
-		return { 0.0f,0.0f,0.0f };
+		return Vector3();
 	}
 	float inv = 1 / length;
 	return Vector3{ x * inv, y * inv,z * inv };
+}
+
+Vector3 Vector3::Normalize(const Vector3& vector)
+{
+	return vector.Normalize();
 }
 
 /*
@@ -200,6 +278,7 @@ Vector3 Vector3::Rejection(const Vector3& left, const Vector3& right)
 	//return left - projection;
 	return Vector3{ left.x - projection.x, left.y - projection.y, left.z - projection.z };
 }
+
 
 
 

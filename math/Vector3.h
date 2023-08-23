@@ -5,6 +5,7 @@ namespace owen
 {
 namespace math
 {
+
 class Vector3
 {
 	static constexpr float float_epsilon = 0.000001f;
@@ -31,17 +32,30 @@ public:
 	Vector3 operator*(const Vector3& scale) const;
 	Vector3& operator*=(const Vector3& scale);
 
+	bool operator==(const Vector3& other) const;
+	bool operator!=(const Vector3& other) const;
+
+	static bool Equal(const Vector3& left, const Vector3& right);
+	static bool NotEqual(const Vector3& left, const Vector3& right);
+
 	float Dot(const Vector3& right) const;
 	static float Dot(const Vector3& left, const Vector3& right);
 
+	static Vector3 Cross(const Vector3& left, const Vector3& right);
+
+	static Vector3 Lerp(const Vector3& left, const Vector3& right, float t);
+	static Vector3 Slerp(const Vector3& left, const Vector3& right, float t);
+	static Vector3 Nlerp(const Vector3& left, const Vector3& right, float t);
 	float Length() const;
 
 	Vector3 Normalize() const;
 
+	static Vector3 Normalize(const Vector3& vector);
 	static float Angle(const Vector3& left, const Vector3& right);
 
 	static Vector3 Projection(const Vector3& left, const Vector3& right);
 	static Vector3 Rejection(const Vector3& left, const Vector3& right);
+
 public:
 	union
 	{
