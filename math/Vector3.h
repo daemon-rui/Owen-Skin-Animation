@@ -55,6 +55,7 @@ public:
 
 	static Vector3 Projection(const Vector3& left, const Vector3& right);
 	static Vector3 Rejection(const Vector3& left, const Vector3& right);
+	static float EuclideanDistance(const Vector3& left, const Vector3& right);
 
 public:
 	union

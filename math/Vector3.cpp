@@ -279,8 +279,10 @@ Vector3 Vector3::Rejection(const Vector3& left, const Vector3& right)
 	return Vector3{ left.x - projection.x, left.y - projection.y, left.z - projection.z };
 }
 
-
-
+float Vector3::EuclideanDistance(const Vector3& left, const Vector3& right)
+{
+	return sqrtf((left.x - right.x) * (left.x - right.x) + (left.y - right.y) * (left.y - right.y) + (left.z - right.z) * (left.z - right.z));
+}
 
 }
 }
