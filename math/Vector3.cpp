@@ -284,6 +284,14 @@ float Vector3::EuclideanDistance(const Vector3& left, const Vector3& right)
 	return sqrtf((left.x - right.x) * (left.x - right.x) + (left.y - right.y) * (left.y - right.y) + (left.z - right.z) * (left.z - right.z));
 }
 
+bool Vector3::IsZero(const Vector3& vec3)
+{
+	return
+		fabsf(vec3.x) < float_epsilon &&
+		fabsf(vec3.y) < float_epsilon &&
+		fabsf(vec3.z) < float_epsilon;
+}
+
 }
 }
 

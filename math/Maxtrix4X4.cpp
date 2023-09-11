@@ -276,6 +276,32 @@ void Matrix4X4::Invert(Matrix4X4& mat4) const
 	mat4 = adjugate * (1.0f / det);
 }
 
+Matrix4X4 Matrix4X4::LookAt(const Vector3& position, const Vector3& target, const Vector3& up)
+{
+	Vector3 f = Vector3::Normalize(target - position) * (-1.0f);
+	Vector3 r = Vector3::Cross(up, f);
+	if (Vector3::IsZero(r))
+	{
+		return Matrix4X4();
+	}
+
+	r = Vector3::Normalize(r);
+	Vector3 u = Vector3::Normalize(Vector3::Cross(f, r));
+
+	Vector3 t = Vector3(
+		-Vector3::Dot(r, position),
+		-Vector3::Dot(u, position),
+		-Vector3::Dot(f, position)
+	);
+	return Matrix4X4(
+		r.x, u.x, f.x, 0,
+		r.y, u.y, f.y, 0,
+		r.z, u.z, f.z, 0,
+		t.x, t.y, t.z, 1
+	);
+
+}
+
 
 }
 }

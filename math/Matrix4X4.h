@@ -53,6 +53,8 @@ public:
 
 	Matrix4X4 Inverse() const;
 	void Invert(Matrix4X4& mat4) const;
+
+	static Matrix4X4 LookAt(const Vector3& position, const Vector3& target, const Vector3& up);
 public:
 	inline float cell(unsigned int row, float x, float y, float z, float w) const
 	{
